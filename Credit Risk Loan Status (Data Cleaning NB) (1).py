@@ -252,9 +252,69 @@ display(new_df.select('last_week_pay').distinct())
 
 # COMMAND ----------
 
-#cleaning application_type:
+#cleaning acc_now_delinq:
 print(new_df.select('acc_now_delinq'))
 display(new_df.select('acc_now_delinq').distinct())
+
+# COMMAND ----------
+
+#changing the dtype to int:
+new_df = new_df.withColumn('acc_now_delinq',col('acc_now_delinq').cast('int'))
+display(new_df)
+
+# COMMAND ----------
+
+#cleaning tot_coll_amt:
+print(new_df.select('tot_coll_amt'))
+display(new_df.select('tot_coll_amt').distinct())
+
+# COMMAND ----------
+
+#changing the dtype to int:
+new_df = new_df.withColumn('tot_coll_amt',col('tot_coll_amt').cast('int'))
+display(new_df)
+
+# COMMAND ----------
+
+#cleaning tot_cur_bal:
+print(new_df.select('tot_cur_bal'))
+display(new_df.select('tot_cur_bal').distinct())
+
+# COMMAND ----------
+
+#changing the dtype to float:
+new_df = new_df.withColumn('tot_cur_bal',col('tot_cur_bal').cast('float'))
+display(new_df)
+
+# COMMAND ----------
+
+#cleaning total_rev_hi_lim:
+print(new_df.select('total_rev_hi_lim'))
+display(new_df.select('total_rev_hi_lim').distinct())
+
+# COMMAND ----------
+
+#changing the dtype to float:
+new_df = new_df.withColumn('total_rev_hi_lim',col('total_rev_hi_lim').cast('float'))
+display(new_df)
+
+# COMMAND ----------
+
+#cleaning loan_status:
+print(new_df.select('loan_status'))
+display(new_df.groupBy('loan_status').count())
+
+# COMMAND ----------
+
+#changing the dtype to float:
+new_df = new_df.withColumn('loan_status',col('loan_status').cast('float'))
+display(new_df)
+
+# COMMAND ----------
+
+#saving the cleaned dataset to a csv file:
+new_df.coalesce(1).write.csv('/FileStore/tables/CreditRisk/credit_risk_data(cleaned).csv',
+                                header=True,mode='overwrite')
 
 # COMMAND ----------
 
