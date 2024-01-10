@@ -41,63 +41,6 @@ sc = StandardScaler(inputCol='enc_features',
 
 # COMMAND ----------
 
-#applying rformula on train data:
-rform_model = rform.fit(train)
-enc_df_train = rform_model.transform(train)
-enc_df_train.display()
-
-
-# COMMAND ----------
-
-#applying rform on test data
-enc_df_test = rform_model.transform(test)
-enc_df_test.display()
-
-# COMMAND ----------
-
-#applying standard scaler:
-sc_model = sc.fit(enc_df_train)
-sc_train = sc_model.transform(enc_df_train)
-sc_train.display()
-
-# COMMAND ----------
-
-#applying standard scaler on test data:
-sc_test = sc_model.transform(enc_df_test)
-sc_test.display()
-
-# COMMAND ----------
-
-# DBTITLE 1,Logistic Regression
-#creating the pipeline
-from pyspark.ml.classification import LogisticRegression
-algo = LogisticRegression(featuresCol='sc_features',
-                            labelCol='loan_status',
-                            )
-
-stages = [rform,sc,algo]
-pipeline_lr = Pipeline(stages=stages)
-
-
-# COMMAND ----------
-
-#training the model with default hyperparameters:
-
-pipe_model = pipeline_lr.fit(train)
-preds = pipe_model.transform(test)
-display(preds)
-
-# COMMAND ----------
-
-#evaluating the base model
-from pyspark.ml.evaluation import MulticlassClassificationEvaluator
-
-evaluator = MulticlassClassificationEvaluator(metricName='f1',labelCol='loan_status')
-score = evaluator.evaluate(preds)
-print(score)
-
-# COMMAND ----------
-
 # DBTITLE 1,Random Forest
 #creating randomforest pipeline
 from pyspark.ml.classification import RandomForestClassifier
@@ -109,6 +52,13 @@ stages = [rform,sc,rf]
 pipeline = Pipeline(stages=stages)
 pipe_model = pipeline.fit(train)
 preds = pipe_model.transform(test)
+
+# COMMAND ----------
+
+#evaluating the base model
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+
+evaluator = MulticlassClassificationEvaluator(metricName='f1',labelCol='loan_status')
 score = evaluator.evaluate(preds)
 print(score)
 
